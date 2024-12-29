@@ -13,7 +13,7 @@ def config_page(route: dict[str, str]) -> None:
     page_title = route["label"]
     page_icon = route["icon"]
 
-    st.set_page_config(page_title, page_icon)
+    st.set_page_config(page_title, page_icon, layout="wide")
 
     menu()
     st.title(page_title)

@@ -8,6 +8,11 @@ dependencies = [
     "dropbox>=12.0.2",
     "dtw-python>=1.5.3",
     "jupyterlab>=4.3.4",
+    "librosa>=0.10.2.post1",
+    "matplotlib>=3.10.0",
+    "numba>=0.60.0",
+    "numpy>=2.0.2",
+    "scipy>=1.14.1",
     "streamlit>=1.41.1",
     "streamlit-audiorecorder>=0.0.6",
 ]
