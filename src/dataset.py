@@ -36,7 +36,7 @@ def id2label(id: int) -> str:
 
 class VietAlphabetDataset(Dataset):
     def __init__(self):
-        folder_dataset = Path(__file__).parents[1] / "dataset" / "processed"
+        folder_dataset = Path(__file__).parents[2] / "dataset" / "processed"
         self._audio_files = sorted(folder_dataset.glob("*.wav"))
 
     def __getitem__(self, n: int) -> Tuple[Tensor, str]:

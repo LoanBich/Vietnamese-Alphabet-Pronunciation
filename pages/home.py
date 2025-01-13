@@ -1,7 +1,7 @@
 import streamlit as st
 
-from menu import Routes
-from utils import config_page
+from src.ui.menu import Routes
+from src.ui.utils import config_page
 
 config_page(Routes.HOME)
 

@@ -12,10 +12,4 @@ def wav2vec2(waveform: Tensor):
     i = feature_extractor(waveform, return_tensors="pt", sampling_rate=16000)
     with torch.no_grad():
         o = model(i.input_values)
-    return o.extract_features.squeeze().max(dim=1).values
-
-
-torch.max
-# print(o.keys())
-# print(o.last_hidden_state.shape)
-# print(o.extract_features.shape)
+    return o.extract_features.squeeze().mean(dim=1).values

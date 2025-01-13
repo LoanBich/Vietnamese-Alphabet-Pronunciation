@@ -3,8 +3,8 @@ from pathlib import Path
 import streamlit as st
 from audiorecorder import audiorecorder
 
-from menu import Routes
-from utils import config_page, unique_audio_filename, upload_file
+from src.ui.menu import Routes
+from src.ui.utils import config_page, unique_audio_filename, upload_file
 
 config_page(Routes.COURSE)
 

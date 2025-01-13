@@ -3,10 +3,13 @@ from uuid import uuid4
 import dropbox
 import streamlit as st
 
-from menu import menu
+from src.ui.menu import menu
 
-access_token = st.secrets["access_token"]
-dbx = dropbox.Dropbox(access_token)
+dbx = dropbox.Dropbox(
+    oauth2_refresh_token=st.secrets["dropbox_refresh_token"],
+    app_key=st.secrets["dropbox_app_key"],
+    app_secret=st.secrets["dropbox_app_secret"],
+)
 
 
 def config_page(route: dict[str, str]) -> None:
@@ -19,16 +22,18 @@ def config_page(route: dict[str, str]) -> None:
     st.title(page_title)
 
 
-def upload_file(data, filename) -> None:
-    """Upload a file.
+def add_vertical_space(num_lines: int = 1) -> None:
+    for _ in range(num_lines):
+        st.write("")
 
-    Return the request response, or None in case of error.
-    """
+
+def upload_file(data, filename) -> None:
     dropbox_file_path = f"/{filename}"
+
     try:
         dbx.files_upload(data, dropbox_file_path)
     except dropbox.exceptions.ApiError as err:
-        print("*** API error", err)
+        print("Dropbox API error", err)
         return None
 
 
