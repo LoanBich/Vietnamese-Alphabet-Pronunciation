@@ -36,7 +36,7 @@ def id2label(id: int) -> str:
 
 class VietAlphabetDataset(Dataset):
     def __init__(self):
-        folder_dataset = Path(__file__).parents[2] / "dataset" / "processed"
+        folder_dataset = Path(__file__).parents[1] / "dataset" / "processed"
         self._audio_files = sorted(folder_dataset.glob("*.wav"))
 
     def __getitem__(self, n: int) -> Tuple[Tensor, str]:
@@ -52,7 +52,7 @@ class VietAlphabetDataset(Dataset):
         return len(self._audio_files)
 
 
-def preprocess():
+def preprocess_dataset():
     raw_dataset = Path(__file__).parents[1] / "dataset" / "raw"
     processed_dataset = Path(__file__).parents[1] / "dataset" / "processed"
 
@@ -72,5 +72,10 @@ def preprocess():
         )
 
 
+def preprocess_waveform(waveform):
+    trimmed_waveform, _ = trim(waveform.squeeze(), top_db=12)
+    return trimmed_waveform
+
+
 if __name__ == "__main__":
-    preprocess()
+    preprocess_dataset()

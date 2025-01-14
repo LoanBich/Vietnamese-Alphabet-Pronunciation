@@ -1,10 +1,16 @@
 from pathlib import Path
 
+import numpy as np
 import streamlit as st
 from audiorecorder import audiorecorder
 
+from src.models import load_model, predict_score
 from src.ui.menu import Routes
-from src.ui.utils import config_page, unique_audio_filename, upload_file
+from src.ui.utils import (
+    add_vertical_space,
+    config_page,
+    unique_session_id,
+)
 
 config_page(Routes.COURSE)
 
@@ -19,6 +25,52 @@ LESSONS = [
     {"title": "Chữ cái V", "id": "V"},
 ]
 
+
+@st.fragment
+def show_lesson(lesson):
+    lesson_title = lesson["title"]
+    lesson_id = lesson["id"]
+    lesson_video_file = (
+        Path(__file__).parents[1] / "assets" / "videos" / f"{lesson_id}.mov"
+    )
+
+    st.subheader(lesson_title)
+    st.video(lesson_video_file)
+
+    add_vertical_space(1)
+
+    st.subheader("Danh gia")
+    st.markdown("Hãy đọc chữ cái được yêu cầu.")
+    audio = audiorecorder(
+        "",  # "Ấn để bắt đầu ghi âm",
+        "",  # "Ấn để dừng lại",
+        key=lesson_id,
+    )
+
+    if st.button(label="Submit", type="primary"):
+        if len(audio) > 0:
+            with st.spinner("Evaluating..."):
+                waveform = np.asarray(
+                    audio.set_frame_rate(16000).get_array_of_samples()
+                ).T
+                score = predict_score(model, waveform, actual_label=lesson_id)
+
+                # upload to Dropbox
+                # audio_buffer = io.BytesIO()
+                # audio.export(audio_buffer, format="wav", parameters=["-ar", str(16000)])
+                # upload_file(
+                #     audio_buffer.getvalue(), unique_audio_filename(session_id, lesson_id)
+                # )
+            st.markdown(f"Your score: {score}")
+        else:
+            st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
+
+
+if "session_id" not in st.session_state:
+    st.session_state["session_id"] = unique_session_id()
+
+model = load_model()
+
 st.sidebar.divider()
 lesson = st.sidebar.radio(
     "Bài học",
@@ -28,20 +80,12 @@ lesson = st.sidebar.radio(
     key="lessons",
 )
 
+add_vertical_space(1)
+
 if lesson is None:
-    st.markdown("Chọn bài học ở bên trái.")
-else:
-    lesson_title = LESSONS[lesson]["title"]
-    lesson_id = LESSONS[lesson]["id"]
-    lesson_video_file = (
-        Path(__file__).parents[1] / "assets" / "videos" / f"{lesson_id}.mov"
+    st.info(
+        "Chọn bài học ở bên trái.",
+        icon="ℹ️",
     )
-
-    st.subheader(lesson_title)
-    st.video(lesson_video_file)
-
-    audio = audiorecorder("", "")
-
-    if len(audio) > 0:
-        st.audio(audio.export().read())
-        upload_file(audio.export().read(), unique_audio_filename(lesson_id))
+else:
+    show_lesson(LESSONS[lesson])
