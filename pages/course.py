@@ -59,7 +59,9 @@ def show_lesson(lesson):
                     score = predict_score(model, waveform, actual_label=lesson_id)
                     st.markdown(f"Your score: {score}")
                 except:
-                    st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
+                    st.error(
+                        "Giúp tớ thu âm lại nha, bạn nhớ phát âm to rõ nhé", icon="🚨"
+                    )
 
                 # upload to Dropbox
                 # audio_buffer = io.BytesIO()
