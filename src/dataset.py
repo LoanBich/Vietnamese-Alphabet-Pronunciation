@@ -73,7 +73,7 @@ def preprocess_dataset():
 
 
 def preprocess_waveform(waveform):
-    trimmed_waveform, _ = trim(waveform.squeeze(), top_db=12)
+    trimmed_waveform, _ = trim(waveform.squeeze(), top_db=10)
     return trimmed_waveform
 
 

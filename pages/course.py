@@ -54,7 +54,7 @@ def show_lesson(lesson):
             with st.spinner("Evaluating..."):
                 waveform = np.asarray(
                     audio.set_frame_rate(16000).get_array_of_samples()
-                ).T
+                ).T.astype(np.float32)
                 try:
                     score = predict_score(model, waveform, actual_label=lesson_id)
                     st.markdown(f"Your score: {score}")
