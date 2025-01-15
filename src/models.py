@@ -31,8 +31,8 @@ def fit_model(feature_vectors, labels):
 
 
 def predict_score(model, waveform, actual_label):
-    processed_waveform = preprocess_waveform(waveform)
-    feature_vector = wav2vec2(torch.from_numpy(processed_waveform))[:86]
+    # processed_waveform = preprocess_waveform(waveform)
+    feature_vector = wav2vec2(torch.from_numpy(waveform))[:86]
     proba = model.predict_proba(np.expand_dims(feature_vector, 0))
     score = proba[:, label2id(actual_label)]
 
