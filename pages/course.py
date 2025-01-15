@@ -57,6 +57,7 @@ def show_lesson(lesson):
                 ).T
                 try:
                     score = predict_score(model, waveform, actual_label=lesson_id)
+                    st.markdown(f"Your score: {score}")
                 except:
                     st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
 
@@ -66,7 +67,6 @@ def show_lesson(lesson):
                 # upload_file(
                 #     audio_buffer.getvalue(), unique_audio_filename(session_id, lesson_id)
                 # )
-            st.markdown(f"Your score: {score}")
         else:
             st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
 
