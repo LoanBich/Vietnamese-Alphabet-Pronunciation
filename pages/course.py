@@ -39,21 +39,26 @@ def show_lesson(lesson):
 
     add_vertical_space(1)
 
-    st.subheader("Danh gia")
-    st.markdown("Hãy đọc chữ cái được yêu cầu.")
+    st.subheader("Chấm điểm")
+    st.markdown(
+        "Sau khi học xong bài học, hãy đọc lại chữ cái đó để hệ thống chấm điểm"
+    )
     audio = audiorecorder(
         "",  # "Ấn để bắt đầu ghi âm",
         "",  # "Ấn để dừng lại",
         key=lesson_id,
     )
 
-    if st.button(label="Submit", type="primary"):
+    if st.button(label="Chấm điểm", type="primary"):
         if len(audio) > 0:
             with st.spinner("Evaluating..."):
                 waveform = np.asarray(
                     audio.set_frame_rate(16000).get_array_of_samples()
                 ).T
-                score = predict_score(model, waveform, actual_label=lesson_id)
+                try:
+                    score = predict_score(model, waveform, actual_label=lesson_id)
+                except:
+                    st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
 
                 # upload to Dropbox
                 # audio_buffer = io.BytesIO()
