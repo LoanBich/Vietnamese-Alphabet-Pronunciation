@@ -1,8 +1,6 @@
 import pickle
 from pathlib import Path
 
-import numpy as np
-import torch
 from sklearn.neural_network import MLPClassifier
 
 from src.dataset import label2id, preprocess_waveform
@@ -11,19 +9,16 @@ from src.feature_extractor import wav2vec2
 
 def fit_model(feature_vectors, labels):
     mlp = MLPClassifier(
-        hidden_layer_sizes=(
-            86,
-            86,
-            40,
-            20,
-            10,
-        ),
-        solver="sgd",
-        verbose=10,
+        hidden_layer_sizes=(256, 128, 64, 32, 16),
+        solver="adam",
+        batch_size=16,
+        learning_rate_init=2e-3,
+        max_iter=200,
         tol=1e-5,
-        random_state=1,
-        learning_rate_init=1e-2,
-        max_iter=1000,
+        verbose=True,
+        validation_fraction=0.1,
+        early_stopping=True,
+        random_state=3,
     )
 
     mlp.fit(feature_vectors, labels)
@@ -31,10 +26,10 @@ def fit_model(feature_vectors, labels):
 
 
 def predict_score(model, waveform, actual_label):
-    # processed_waveform = preprocess_waveform(waveform)
-    feature_vector = wav2vec2(torch.from_numpy(waveform))[:86]
-    proba = model.predict_proba(np.expand_dims(feature_vector, 0))
-    score = proba[:, label2id(actual_label)]
+    processed_waveform = preprocess_waveform(waveform)
+    feature_vector = wav2vec2(processed_waveform)
+    proba = model.predict_proba(feature_vector)
+    score = proba[0, label2id(actual_label)]
 
     return renormalize(score, (0, 1), (1, 5))
 

@@ -40,14 +40,19 @@ def show_lesson(lesson):
     add_vertical_space(1)
 
     st.subheader("Chấm điểm")
-    st.markdown(
-        "Sau khi học xong bài học, hãy đọc lại chữ cái đó để hệ thống chấm điểm"
-    )
+    st.markdown("Sau khi học xong bài học, hãy đọc lại chữ cái đó để hệ thống chấm điểm")
     audio = audiorecorder(
         "",  # "Ấn để bắt đầu ghi âm",
         "",  # "Ấn để dừng lại",
         key=lesson_id,
     )
+
+    if len(audio) > 0:
+        st.info(
+            "Hãy giúp tớ check lại phát âm xem đã đúng và rõ ràng chưa nhé ạ! Nếu chưa được thì hãy ghi âm lại giúp tớ nha ạ!!",
+            icon="ℹ️",
+        )
+        st.audio(audio.export().read())
 
     if st.button(label="Chấm điểm", type="primary"):
         if len(audio) > 0:
@@ -57,7 +62,7 @@ def show_lesson(lesson):
                 ).T.astype(np.float32)
                 try:
                     score = predict_score(model, waveform, actual_label=lesson_id)
-                    st.markdown(f"Your score: {score}")
+                    st.markdown(f"Your score: {score:.1f}")
                 except:
                     st.error(
                         "Giúp tớ thu âm lại nha, bạn nhớ phát âm to rõ nhé", icon="🚨"
