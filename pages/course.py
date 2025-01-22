@@ -1,3 +1,4 @@
+import io
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +10,9 @@ from src.ui.menu import Routes
 from src.ui.utils import (
     add_vertical_space,
     config_page,
+    unique_audio_filename,
     unique_session_id,
+    upload_file,
 )
 
 config_page(Routes.COURSE)
@@ -57,23 +60,35 @@ def show_lesson(lesson):
     if st.button(label="Chấm điểm", type="primary"):
         if len(audio) > 0:
             with st.spinner("Evaluating..."):
+                score = None
                 waveform = np.asarray(
                     audio.set_frame_rate(16000).get_array_of_samples()
                 ).T.astype(np.float32)
+
                 try:
                     score = predict_score(model, waveform, actual_label=lesson_id)
-                    st.markdown(f"Your score: {score:.1f}")
+                    if score > 3.8:
+                        st.info("Bạn phát âm rất tốt!")
+                    else:
+                        st.warning(
+                            "Bạn cần cải thiện thêm. Xem lại video và phát âm lại nhé!"
+                        )
                 except:
                     st.error(
                         "Giúp tớ thu âm lại nha, bạn nhớ phát âm to rõ nhé", icon="🚨"
                     )
 
                 # upload to Dropbox
-                # audio_buffer = io.BytesIO()
-                # audio.export(audio_buffer, format="wav", parameters=["-ar", str(16000)])
-                # upload_file(
-                #     audio_buffer.getvalue(), unique_audio_filename(session_id, lesson_id)
-                # )
+                audio_buffer = io.BytesIO()
+                audio.export(audio_buffer, format="wav", parameters=["-ar", str(16000)])
+                upload_file(
+                    audio_buffer.getvalue(),
+                    unique_audio_filename(
+                        st.session_state["session_id"],
+                        lesson_id,
+                        score,
+                    ),
+                )
         else:
             st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
 
