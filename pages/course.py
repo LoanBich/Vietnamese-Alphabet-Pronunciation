@@ -67,12 +67,6 @@ def show_lesson(lesson):
 
                 try:
                     score = predict_score(model, waveform, actual_label=lesson_id)
-                    if score > 3.8:
-                        st.info("Bạn phát âm rất tốt!")
-                    else:
-                        st.warning(
-                            "Bạn cần cải thiện thêm. Xem lại video và phát âm lại nhé!"
-                        )
                 except:
                     st.error(
                         "Giúp tớ thu âm lại nha, bạn nhớ phát âm to rõ nhé", icon="🚨"
@@ -89,6 +83,12 @@ def show_lesson(lesson):
                         score,
                     ),
                 )
+                if score is not None and score > 3.8:
+                    st.info(f"Điểm: **{score:.1f}**. Bạn phát âm rất tốt!")
+                if score is not None and score <= 3.8:
+                    st.warning(
+                        "Điểm: **{score:.1f}**. Bạn cần cải thiện thêm. Xem lại video và phát âm lại nhé!"
+                    )
         else:
             st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
 

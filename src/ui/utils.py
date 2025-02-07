@@ -28,7 +28,7 @@ def add_vertical_space(num_lines: int = 1) -> None:
 
 
 def upload_file(data, filename) -> None:
-    dropbox_file_path = f"/{filename}"
+    dropbox_file_path = f"/Learn/{filename}"
 
     try:
         dbx.files_upload(data, dropbox_file_path)
@@ -39,7 +39,7 @@ def upload_file(data, filename) -> None:
 
 def unique_audio_filename(session_id: str, lesson_id: str, score: float | None) -> str:
     id = uuid4().hex
-    return f"{session_id}/{lesson_id}_{id}_{score}.mp3"
+    return f"{session_id}/{lesson_id}_{id}_{score}.wav"
 
 
 def unique_session_id() -> str:
