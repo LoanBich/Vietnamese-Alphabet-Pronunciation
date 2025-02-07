@@ -84,10 +84,12 @@ def show_lesson(lesson):
                     ),
                 )
                 if score is not None and score > 3.8:
-                    st.info(f"Điểm: **{score:.1f}**. Bạn phát âm rất tốt!")
+                    st.info(
+                        f"Trên thang điểm 5, bạn được **{score:.1f}** điểm. Bạn phát âm rất tốt!"
+                    )
                 if score is not None and score <= 3.8:
                     st.warning(
-                        "Điểm: **{score:.1f}**. Bạn cần cải thiện thêm. Xem lại video và phát âm lại nhé!"
+                        "Trên thang điểm 5, bạn được **{score:.1f}** điểm. Bạn cần cải thiện thêm. Xem lại video và phát âm lại nhé!"
                     )
         else:
             st.error("Chưa được rồi, giúp tớ thu âm lại nha", icon="🚨")
